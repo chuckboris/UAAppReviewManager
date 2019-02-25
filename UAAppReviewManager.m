@@ -833,17 +833,23 @@ static NSString * const reviewURLTemplate                   = @"macappstore://it
 
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 - (void)showRatingAlert {
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:self.reviewTitle
-														message:self.reviewMessage
-													   delegate:self
-											  cancelButtonTitle:self.cancelButtonTitle
-											  otherButtonTitles:(self.showsRemindButton ? self.remindButtonTitle : self.rateButtonTitle),   // If we have a remind button, show it first. Otherwise show the rate button
-                                                                (self.showsRemindButton ? self.rateButtonTitle : nil),                      // If we have a remind button, show the rate button next. Otherwise stop adding buttons.
-                                                                nil];
-    alertView.cancelButtonIndex = -1;
-	self.ratingAlert = alertView;
-    [alertView show];
-
+    if (@available(iOS 10.3, *))
+    {
+        [SKStoreReviewController requestReview];
+    } else
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:self.reviewTitle
+                                                            message:self.reviewMessage
+                                                           delegate:self
+                                                  cancelButtonTitle:self.cancelButtonTitle
+                                                  otherButtonTitles:(self.showsRemindButton ? self.remindButtonTitle : self.rateButtonTitle),   // If we have a remind button, show it first. Otherwise show the rate button
+                                                                    (self.showsRemindButton ? self.rateButtonTitle : nil),                      // If we have a remind button, show the rate button next. Otherwise stop adding buttons.
+                                                                    nil];
+        alertView.cancelButtonIndex = -1;
+        self.ratingAlert = alertView;
+        [alertView show];
+    }
+    
     if (self.didDisplayAlertBlock)
 		self.didDisplayAlertBlock();
 }
