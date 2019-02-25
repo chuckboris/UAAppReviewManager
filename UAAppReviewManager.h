@@ -8,8 +8,13 @@
 //
 
 
-#import <Cocoa/Cocoa.h>
+
+#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 #import <Foundation/Foundation.h>
+#else
+#import <Cocoa/Cocoa.h>
+#endif
+
 #import <StoreKit/StoreKit.h>
 
 
